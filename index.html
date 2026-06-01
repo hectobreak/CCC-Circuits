@@ -27,14 +27,14 @@
             {type: "ConstWire", inputs: [[5], [1]]},
             {type: "EqNatural", inputs: [[6, 0], [6, 2]]},
             {type: "SaturatedSubtractNatural", inputs: [[6, 0], [6, 3]]},
-            {type: "Eval", out_arity: 1, inputs: [[6, 1], [8], [6, 1]]},
+            {type: "Eval", in_arity: 2, out_arity: 1, inputs: [[6, 1], [8], [6, 1]]},
             {type: "MultiplyNatural", inputs: [[6, 0], [9]]},
             {type: "If", inputs: [[7], [6, 3], [10]]},
             {type: "ConstWire", inputs: [[3], [11]]},
-            {type: "Eval", out_arity: 1, inputs: [[12, 1], [12, 0], [12, 1]]},
+            {type: "Eval", in_arity: 2, out_arity: 1, inputs: [[12, 1], [12, 0], [12, 1]]},
             {type: "ConstNatural", inputs: [], value: 10n},
             {type: "ConstWire", inputs: [[2], [13]]},
-            {type: "Eval", out_arity: 1, inputs: [[15], [14]]},
+            {type: "Eval", in_arity: 1, out_arity: 1, inputs: [[15], [14]]},
             {type: "Codomain", inputs: [[16]]},
             {type: "Print", inputs: [[17]]}
         ]

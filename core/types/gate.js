@@ -16,7 +16,7 @@ class Gate {
             get: (obj, key) => {
                 const index = Number(key);
                 if (String(index) === key && Number.isInteger(index) && index >= 0) {
-                    return CCCLIB["GetOutput"](obj, index)
+                    return CCCLIB["GetOutput"].constructor(index).run(obj)[0];
                 }
                 return obj[key];
             },
