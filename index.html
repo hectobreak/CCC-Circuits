@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./core/types/gate.js"></script>
+    <script src="./core/types/bool.js"></script>
+    <script src="./core/types/maybe.js"></script>
+    <script src="core/types/natural.js"></script>
+    <script src="./core/gates/core.js"></script>
+    <script src="./core/gates/bool.js"></script>
+    <script src="./core/gates/natural.js"></script>
+    <script src="./core/gates/io.js"></script>
+    <script src="./core/json_compiler.js"></script>
+</head>
+<body>
+
+<script>
+    const program_factorial = {
+        "gates": [
+            {type: "ConstNatural", inputs: [], value: 0n},
+            {type: "ConstNatural", inputs: [], value: 1n},
+            {type: "Nil", inputs: []},
+            {type: "Wire", inputs: [[2]]},
+            {type: "Wire", inputs: [[3]]},
+            {type: "ConstWire", inputs: [[4], [0]]},
+            {type: "ConstWire", inputs: [[5], [1]]},
+            {type: "EqNatural", inputs: [[6, 0], [6, 2]]},
+            {type: "SaturatedSubtractNatural", inputs: [[6, 0], [6, 3]]},
+            {type: "Eval", out_arity: 1, inputs: [[6, 1], [8], [6, 1]]},
+            {type: "MultiplyNatural", inputs: [[6, 0], [9]]},
+            {type: "If", inputs: [[7], [6, 3], [10]]},
+            {type: "ConstWire", inputs: [[3], [11]]},
+            {type: "Eval", out_arity: 1, inputs: [[12, 1], [12, 0], [12, 1]]},
+            {type: "ConstNatural", inputs: [], value: 10n},
+            {type: "ConstWire", inputs: [[2], [13]]},
+            {type: "Eval", out_arity: 1, inputs: [[15], [14]]},
+            {type: "Codomain", inputs: [[16]]},
+            {type: "Print", inputs: [[17]]}
+        ]
+    };
+
+    compile_gates(program_factorial.gates);
+</script>
+</body>
+</html>
