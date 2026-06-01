@@ -6,8 +6,8 @@
  */
 
 {
-    function Bin(eq, pretty_printer){
-        return function(a, b) {
+    function Bin(eq, pretty_printer) {
+        return function (a, b) {
             if (a.outputs !== b.outputs)
                 throw new Error("Output arity mismatch");
             if (a.inputs !== b.inputs)
@@ -20,13 +20,13 @@
                     const av = a.run(...inputs);
                     const bv = b.run(...inputs);
 
-                    for(let ax of av){
-                        if(!(ax instanceof Natural)){
+                    for (let ax of av) {
+                        if (!(ax instanceof Natural)) {
                             throw new Error("Non-natural operator for arithmetic")
                         }
                     }
-                    for(let bx of bv){
-                        if(!(bx instanceof Natural)){
+                    for (let bx of bv) {
+                        if (!(bx instanceof Natural)) {
                             throw new Error("Non-natural operator for arithmetic")
                         }
                     }
@@ -46,7 +46,7 @@
         }
     }
 
-    function BinGate(name, eq, pretty_printer){
+    function BinGate(name, eq, pretty_printer) {
         return new Gate(
             2,
             1,
@@ -64,4 +64,10 @@
     CCCLIB['AndNatural'] = BinGate('AndNatural', (x, y) => x.and(y), (a, b) => `${a} & ${b}`);
     CCCLIB['OrNatural'] = BinGate('OrNatural', (x, y) => x.or(y), (a, b) => `${a} | ${b}`);
     CCCLIB['XorNatural'] = BinGate('XorNatural', (x, y) => x.xor(y), (a, b) => `${a} ^ ${b}`);
+
+    CCCLIB['ConstNatural'] = {
+        meta_gate: true,
+        meta_params: [{"name": "value"}],
+        constructor: (value) => new Natural(value)
+    }
 }

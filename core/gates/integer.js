@@ -84,4 +84,11 @@
         },
         (context) => [`NegateInteger(${context.map(c => `X_{${c.join(", ")}}`)})`]
     );
+
+
+    CCCLIB['ConstInteger'] = {
+        meta_gate: true,
+        meta_params: [{"name": "value"}],
+        constructor: (value) => new IntegerGate(value)
+    }
 }

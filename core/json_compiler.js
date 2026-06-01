@@ -39,42 +39,35 @@ function compile_gates(gates){
     for(let i = 0; i < gates.length; ++i){
         let inst = gates[i];
         let ins;
-        switch(inst.type){
-            case "ConstNatural":
-                check_in_arity(inst, 0);
-                add_gate(new Natural(inst.value));
-                break;
-            default:
-                if(inst.type in CCCLIB){
-                    if(CCCLIB[inst.type].meta_gate){
-                        let inputs = CCCLIB[inst.type].inputs;
-                        if(inputs === undefined) inputs = null;
-                        ins = check_in_arity(inst, inputs);
-                        let meta_params = [];
-                        for(let param of CCCLIB[inst.type].meta_params){
-                            if(inst[param["name"]] === undefined){
-                                throw new Error(`Error in gate ${i}: Missing field: ${param["name"]}`);
-                            }
-                            meta_params.push(inst[param["name"]]);
-                        }
-                        if(CCCLIB[inst.type].ins_min !== undefined && ins.length < CCCLIB[inst.type].ins_min){
-                            throw new Error(`Error in gate ${i}: Wrong arity. Expected >= ${CCCLIB[inst.type].ins_min}, got ${ins.length}`);
-                        }
-                        let tmp = CCCLIB[inst.type].constructor(...meta_params);
-                        if(tmp instanceof Gate){
-                            add_gate(tmp.run(...ins)[0]);
-                        } else {
-                            add_gate(tmp(...ins));
-                        }
-                    } else {
-                        ins = check_in_arity(inst, CCCLIB[inst.type].inputs);
-                        add_gate(CCCLIB[inst.type].run(...ins)[0]);
+        if (inst.type in CCCLIB) {
+            if (CCCLIB[inst.type].meta_gate) {
+                let inputs = CCCLIB[inst.type].inputs;
+                if (inputs === undefined) inputs = null;
+                ins = check_in_arity(inst, inputs);
+                let meta_params = [];
+                for (let param of CCCLIB[inst.type].meta_params) {
+                    if (inst[param["name"]] === undefined) {
+                        throw new Error(`Error in gate ${i}: Missing field: ${param["name"]}`);
                     }
-                    break;
-                } else {
-                    throw new Error(`Error in gate ${i}: Unknown gate: ${inst.type}`);
+                    meta_params.push(inst[param["name"]]);
                 }
+                if (CCCLIB[inst.type].ins_min !== undefined && ins.length < CCCLIB[inst.type].ins_min) {
+                    throw new Error(`Error in gate ${i}: Wrong arity. Expected >= ${CCCLIB[inst.type].ins_min}, got ${ins.length}`);
+                }
+                let tmp = CCCLIB[inst.type].constructor(...meta_params);
+                if (tmp instanceof Gate) {
+                    add_gate(tmp.run(...ins)[0]);
+                } else {
+                    add_gate(tmp(...ins));
+                }
+            } else {
+                ins = check_in_arity(inst, CCCLIB[inst.type].inputs);
+                add_gate(CCCLIB[inst.type].run(...ins)[0]);
+            }
+        } else {
+            throw new Error(`Error in gate ${i}: Unknown gate: ${inst.type}`);
         }
+
     }
     return res;
 }
