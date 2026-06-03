@@ -5,7 +5,10 @@
     Víctor Franco, June 2026
  */
 
-function compile_gates(gates){
+function compile_gates(method){
+    let gates = method.gates;
+    let wires = method.wires;
+
     let res = [];
     function add_gate(gate){
         res.push({
@@ -13,17 +16,18 @@ function compile_gates(gates){
             output_ref: {}
         });
     }
-    function check_in_arity(gate_desc, n=null){
+    function check_in_arity(i, gate_desc, n=null){
         if(!(gate_desc.inputs instanceof Array) || (n !== null && gate_desc.inputs.length !== n)){
-            throw new Error("Wrong arity");
+            console.log(gate_desc, n);
+            throw new Error(`Error in gate ${i}: Wrong arity.`);
         }
         let ins = [];
         for(let inx of gate_desc.inputs){
             if(!(inx instanceof Array) || (inx.length !== 1 && inx.length !== 2)){
-                throw new Error("Malformed input");
+                throw new Error(`Error in gate ${i}: Malformed input`);
             }
             if(res[inx[0]] === undefined){
-                throw new Error(`Unknown gate index ${inx[0]}`);
+                throw new Error(`Error in gate ${i}: Unknown gate index ${inx[0]}`);
             }
             if(inx.length === 1){
                 ins.push(res[inx[0]].gate);
@@ -36,6 +40,33 @@ function compile_gates(gates){
         }
         return ins;
     }
+
+    for(let i = 0; i < gates.length; ++i){
+        gates[i].inputs = [];
+    }
+
+    for(let in_gate of Object.keys(wires)){
+        let stack = wires[in_gate].map(x => [[Number(in_gate)], x]);
+        while(stack.length > 0){
+            let [res, wire] = stack.pop();
+            if(wire.type === "select"){
+                if(res.length !== 1){
+                    throw new Error("Double wire selection");
+                }
+                stack = stack.concat(wire.wires.map(x => [
+                    [res[0], wire.index],
+                    x
+                ]));
+            } else if(wire.type === "end"){
+                let [gate_end, input_end] = wire.end;
+                if(gates[gate_end].inputs[input_end] !== undefined) {
+                    throw new Error("Repeat input");
+                }
+                gates[gate_end].inputs[input_end] = res;
+            }
+        }
+    }
+
     for(let i = 0; i < gates.length; ++i){
         let inst = gates[i];
         let ins;
@@ -43,7 +74,7 @@ function compile_gates(gates){
             if (CCCLIB[inst.type].meta_gate) {
                 let inputs = CCCLIB[inst.type].inputs;
                 if (inputs === undefined) inputs = null;
-                ins = check_in_arity(inst, inputs);
+                ins = check_in_arity(i, inst, inputs);
                 let meta_params = [];
                 for (let param of CCCLIB[inst.type].meta_params) {
                     if (inst[param["name"]] === undefined) {
@@ -61,7 +92,7 @@ function compile_gates(gates){
                     add_gate(tmp(...ins));
                 }
             } else {
-                ins = check_in_arity(inst, CCCLIB[inst.type].inputs);
+                ins = check_in_arity(i, inst, CCCLIB[inst.type].inputs);
                 add_gate(CCCLIB[inst.type].run(...ins)[0]);
             }
         } else {

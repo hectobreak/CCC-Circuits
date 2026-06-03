@@ -1,0 +1,24 @@
+· Implement Sum
+· SumCase : (A + B) x (A -> C) x (B -> D) -> (C + D)
+· SumIsLeft : (A + B) -> Bool
+· SumIsRight : (A + B) -> Bool
+· SumCollapse : (A + A) -> A
+· SumCommute : (A + B) -> (B + A)
+· SumAssociateRight : (A + (B + C)) -> ((A + B) + C)
+· SumAssociateLeft : ((A + B) + C) -> (A + (B + C))
+
+
+· Implement Float
+· Implement Double
+· If : Bool x A x B -> A + B
+· Maybe A : 1 + A
+
+
+· Draw : (Double² -> Double³) -> ·. Represents the image of [0, 1]^2 as an image.
+· Render : Same as Draw, but you can actually input the dimensions of the render image, and instead of displaying as a small square in the node it gets outputted as a full image.
+
+
+· The entire nodal interface (this one is going to take a while)
+·· Just as a reminder: P(t) = (1 ; t ; t² ; t³) ( 1, -3, 3, -1 ; 0, 3, -6, 3 ; 0, 0, 3, -3 ; 0, 0, 0, 1 ) (P_0, P_1, P_2, P_3)
+· The ability to create custom gates and reference them later
+· Save/Load functionality
