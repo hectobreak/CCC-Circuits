@@ -63,4 +63,13 @@ class FloatGate extends Gate {
     multiplicativeInverse(){
         return new FloatGate(1/this.value[0]);
     }
+    
+    isNaN(){
+        return new Bool(isNaN(this.value[0]));
+    }
+    
+    isFinite(){
+        return new Bool(isFinite(this.value[0]));
+    }
 }
+
